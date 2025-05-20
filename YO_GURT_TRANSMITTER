@@ -2,10 +2,13 @@
 #include <RF24.h>
 #include <nRF24L01.h>
 
+int button = 5;
 RF24 radio(9, 8); // CE, CSN
 const byte address[10] = "ADDRESS01";
 
 void setup() {
+  pinMode(button, INPUT);
+  digitalWrite(button, HIGH);
   Serial.begin(9600);
   radio.begin();
   radio.openWritingPipe(address);
@@ -13,8 +16,17 @@ void setup() {
   radio.stopListening();
 };
 
+
 void loop() {
-  const char txt[] = "YO GURT";
+  if(digitalRead(button) == LOW)
+  {
+  const char txt[32] = "ON";
+  Serial.println(txt);
   radio.write(&txt, sizeof(txt));
-  delay(2000);
+  }
+  else{
+  const char txt2[32] = "OFF";
+  Serial.println(txt2);
+  radio.write(&txt2, sizeof(txt2));
+  }
 };
